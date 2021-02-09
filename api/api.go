@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"path/filepath"
+
 	appsv1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,12 +13,10 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/client-go/util/retry"
-	"path/filepath"
 )
 
-
-// -------------------------------------------------------------------- create the deployment ---------------------------------------------------
-func CreateDeployment()  {
+//-------------------------------------------------------------------- create an clientset ------------------------------------------------------
+func createClientset() kubernetes.Interface {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -33,7 +33,28 @@ func CreateDeployment()  {
 	if err != nil {
 		panic(err)
 	}
+	return clientset
+}
 
+// -------------------------------------------------------------------- create the deployment ---------------------------------------------------
+func CreateDeployment() {
+	//var kubeconfig *string
+	//if home := homedir.HomeDir(); home != "" {
+	//	kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	//} else {
+	//	kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	//}
+	//flag.Parse()
+	//
+	//config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//clientset, err := kubernetes.NewForConfig(config)
+	//if err != nil {
+	//	panic(err)
+	//}
+	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
 	deployment := &appsv1.Deployment{
@@ -82,24 +103,8 @@ func CreateDeployment()  {
 }
 
 //--------------------------------------------------- get the deployment -----------------------------------------------------
-func GetDeployment()  {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err)
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err)
-	}
-
+func GetDeployment() {
+	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
 	fmt.Printf("Listing deployments in namespace %q:\n", apiv1.NamespaceDefault)
@@ -112,26 +117,9 @@ func GetDeployment()  {
 	}
 }
 
-
 //--------------------------------------------------------------update the deployment ---------------------------------------
-func UpdateDeployment()  {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err)
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err)
-	}
-
+func UpdateDeployment() {
+	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
 	fmt.Println("Updating deployment...")
@@ -156,7 +144,7 @@ func UpdateDeployment()  {
 			panic(fmt.Errorf("Failed to get latest version of Deployment: %v", getErr))
 		}
 
-		result.Spec.Replicas = int32Ptr(1)                           // reduce replica count
+		result.Spec.Replicas = int32Ptr(1)                                                       // reduce replica count
 		result.Spec.Template.Spec.Containers[0].Image = "pranganmajumder/go-basic-restapi:1.0.3" // change nginx version
 		_, updateErr := deploymentsClient.Update(context.TODO(), result, metav1.UpdateOptions{})
 		return updateErr
@@ -167,28 +155,10 @@ func UpdateDeployment()  {
 	fmt.Println("Updated deployment...")
 }
 
-
 //-------------------------------------------------------delete the deployment ------------------------------
-func DeleteDeployment()  {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err)
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err)
-	}
-
+func DeleteDeployment() {
+	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
-
 
 	fmt.Println("Deleting deployment...")
 	deletePolicy := metav1.DeletePropagationForeground
@@ -199,7 +169,5 @@ func DeleteDeployment()  {
 	}
 	fmt.Println("Deleted deployment.")
 }
-
-
 
 func int32Ptr(i int32) *int32 { return &i }
