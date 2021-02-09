@@ -17,10 +17,10 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/pranganmajumder/client-go/api"
 	"github.com/spf13/cobra"
 )
-
 
 // rootCmd represents the base command when called without any subcommands
 var createCMD = &cobra.Command{
@@ -36,10 +36,9 @@ var createCMD = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Deployment called")
-		api.CreateDeployment()
+		api.CreateDeployment(default_image, default_replica)
 	},
 }
-
 
 var getCMD = &cobra.Command{
 	Use:   "get-deploy",
@@ -71,10 +70,9 @@ var updateCMD = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Deployment called")
-		api.UpdateDeployment()
+		api.UpdateDeployment(updated_image, updated_replica)
 	},
 }
-
 
 var deleteCMD = &cobra.Command{
 	Use:   "delete-deploy",
@@ -94,9 +92,23 @@ var deleteCMD = &cobra.Command{
 }
 
 // -------------------------------------- add the custom command to your rootCMD (root.go) --------------------------------------------------
+
+var (
+	default_image   string
+	default_replica int32
+	updated_image   string
+	updated_replica int32
+)
+
 func init() {
 	rootCmd.AddCommand(createCMD)
 	rootCmd.AddCommand(getCMD)
 	rootCmd.AddCommand(updateCMD)
 	rootCmd.AddCommand(deleteCMD)
+
+	createCMD.PersistentFlags().StringVarP(&default_image, "image", "i", "pranganmajumder/go-basic-restapi:1.0.0", "It sets the custom image you want")
+	createCMD.PersistentFlags().Int32VarP(&default_replica, "replica", "r", 2, "It sets the number of replica user want")
+
+	updateCMD.PersistentFlags().StringVarP(&updated_image, "image", "i", "pranganmajumder/go-basic-restapi:1.0.0", "It'll update the current image set by the flag")
+	updateCMD.PersistentFlags().Int32VarP(&updated_replica, "replica", "r", 1, "it'll update the number of replica")
 }

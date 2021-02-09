@@ -37,23 +37,9 @@ func createClientset() kubernetes.Interface {
 }
 
 // -------------------------------------------------------------------- create the deployment ---------------------------------------------------
-func CreateDeployment() {
-	//var kubeconfig *string
-	//if home := homedir.HomeDir(); home != "" {
-	//	kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	//} else {
-	//	kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	//}
-	//flag.Parse()
-	//
-	//config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//clientset, err := kubernetes.NewForConfig(config)
-	//if err != nil {
-	//	panic(err)
-	//}
+func CreateDeployment(image string, replica int32) {
+	fmt.Println("string  =  ", image)
+	fmt.Println("replica  =  ", replica)
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
@@ -62,7 +48,7 @@ func CreateDeployment() {
 			Name: "demo-deployment",
 		},
 		Spec: appsv1.DeploymentSpec{
-			Replicas: int32Ptr(2),
+			Replicas: int32Ptr(replica),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
 					"app": "demo",
@@ -78,7 +64,7 @@ func CreateDeployment() {
 					Containers: []apiv1.Container{
 						{
 							Name:  "web",
-							Image: "pranganmajumder/go-basic-restapi:1.0.1",
+							Image: image, //"pranganmajumder/go-basic-restapi:1.0.1",
 							Ports: []apiv1.ContainerPort{
 								{
 									Name:          "http",
@@ -118,7 +104,7 @@ func GetDeployment() {
 }
 
 //--------------------------------------------------------------update the deployment ---------------------------------------
-func UpdateDeployment() {
+func UpdateDeployment(image string, replica int32) {
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
@@ -144,8 +130,8 @@ func UpdateDeployment() {
 			panic(fmt.Errorf("Failed to get latest version of Deployment: %v", getErr))
 		}
 
-		result.Spec.Replicas = int32Ptr(1)                                                       // reduce replica count
-		result.Spec.Template.Spec.Containers[0].Image = "pranganmajumder/go-basic-restapi:1.0.3" // change nginx version
+		result.Spec.Replicas = int32Ptr(replica) // reduce replica count
+		result.Spec.Template.Spec.Containers[0].Image = image
 		_, updateErr := deploymentsClient.Update(context.TODO(), result, metav1.UpdateOptions{})
 		return updateErr
 	})
