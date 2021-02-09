@@ -15,7 +15,7 @@ import (
 	"k8s.io/client-go/util/retry"
 )
 
-//-------------------------------------------------------------------- create an clientset ------------------------------------------------------
+//-------------------------------------------------------------------- create an clients ------------------------------------------------------
 func createClientset() kubernetes.Interface {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {

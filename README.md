@@ -21,7 +21,8 @@
 * Or `go build -o ./app` this will create a binary file name `app`
 
 ##### RUN:
-* `./client-go create-deploy`
+* `./client-go create-deploy` or  using flag `./client-go create-deploy -r=5 -i=pranganmajumder/go-basic-restapi:1.0.3`
 * `./client-go get-deploy`
 * `./client-go update-deploy` it'll create 1 replica and update the previous image. to check run again `./client-go get-deploy`
+    * using flag`./client-go update-deploy -r=3 -i=pranganmajumder/go-basic-restapi:1.0.0` 
 * `./client-go delete-deploy`
