@@ -14,7 +14,7 @@ var listDeployCMD = &cobra.Command{
 			sub-command of get command . You need to create the list-deploy sub-command manually and add it to getCMD`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		api.GetDeployment()
+		api.GetDeployments()
 	},
 }
 

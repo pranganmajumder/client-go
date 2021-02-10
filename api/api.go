@@ -87,8 +87,8 @@ func CreateDeployment(image string, replica int32) {
 	fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
 }
 
-//GetDeployment--------------------------------------------------- get the deployment -----------------------------------------------------
-func GetDeployment() {
+//GetDeployments--------------------------------------------------- get the deployment -----------------------------------------------------
+func GetDeployments() {
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
