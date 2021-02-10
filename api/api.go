@@ -38,8 +38,7 @@ func createClientset() kubernetes.Interface {
 
 // -------------------------------------------------------------------- create the deployment ---------------------------------------------------
 func CreateDeployment(image string, replica int32) {
-	fmt.Println("string  =  ", image)
-	fmt.Println("replica  =  ", replica)
+
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
 
