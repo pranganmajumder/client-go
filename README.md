@@ -1,7 +1,7 @@
 
 
 
-
+[![Go Report Card](https://goreportcard.com/badge/github.com/pranganmajumder/client-go)](https://goreportcard.com/report/github.com/pranganmajumder/client-go)
 ### Process:
 ##### Init Go module & download required dependencies:
 * [How to init go module & dependencies](https://medium.com/@adiach3nko/package-management-with-go-modules-the-pragmatic-guide-c831b4eaaf31)

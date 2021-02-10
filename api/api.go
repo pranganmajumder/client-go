@@ -15,7 +15,7 @@ import (
 	"k8s.io/client-go/util/retry"
 )
 
-//-------------------------------------------------------------------- create an clients ------------------------------------------------------
+//createClientset-------------------------------------------------------------------- create an clients ------------------------------------------------------
 func createClientset() kubernetes.Interface {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
@@ -36,7 +36,7 @@ func createClientset() kubernetes.Interface {
 	return clientset
 }
 
-// -------------------------------------------------------------------- create the deployment ---------------------------------------------------
+//CreateDeployment -------------------------------------------------------------------- create the deployment ---------------------------------------------------
 func CreateDeployment(image string, replica int32) {
 
 	var clientset = createClientset()
@@ -87,7 +87,7 @@ func CreateDeployment(image string, replica int32) {
 	fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
 }
 
-//--------------------------------------------------- get the deployment -----------------------------------------------------
+//GetDeployment--------------------------------------------------- get the deployment -----------------------------------------------------
 func GetDeployment() {
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
@@ -102,7 +102,7 @@ func GetDeployment() {
 	}
 }
 
-//--------------------------------------------------------------update the deployment ---------------------------------------
+//UpdateDeployment--------------------------------------------------------------update the deployment ---------------------------------------
 func UpdateDeployment(image string, replica int32) {
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
@@ -140,7 +140,7 @@ func UpdateDeployment(image string, replica int32) {
 	fmt.Println("Updated deployment...")
 }
 
-//-------------------------------------------------------delete the deployment ------------------------------
+//DeleteDeployment-------------------------------------------------------delete the deployment ------------------------------
 func DeleteDeployment() {
 	var clientset = createClientset()
 	deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)

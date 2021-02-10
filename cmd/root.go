@@ -1,3 +1,4 @@
+//Package cmd
 /*
 Copyright © 2021 NAME HERE <EMAIL ADDRESS>
 
@@ -17,8 +18,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -38,7 +40,7 @@ var rootCmd = &cobra.Command{
 			to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-		Run: func(cmd *cobra.Command, args []string) { fmt.Println("Hello Cli created") },
+	Run: func(cmd *cobra.Command, args []string) { fmt.Println("Hello Cli created") },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
